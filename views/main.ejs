@@ -1,0 +1,37 @@
+<% layout('./index') %>
+<div class="container text-center my-5">
+  <h1>Simple Task Managing App</h1>
+  <p class="text-muted">
+    This web application was created to fulfill Web Technology module’s
+    requirements and does not represent an actual company or service
+  </p>
+  <div class="d-flex mx-auto align-items-center flex-column">
+        <div class=" card my-5 px-4 py-2" style="width: 18rem;">
+            <form action="/create" method="Post">
+                
+                <div class="mb-3">
+                    <label for="task" class="form-label">Task</label>
+                    <input type="text" class="form-control" id="task"placeholder="ex. buy fish"  name="task[task]">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name=task[importance] value="true" class="form-check-input" id="exampleCheck1">
+                    <label  class="form-check-label" for="exampleCheck1">Important</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="">
+            <div class="card" style="width: 18rem;">
+                <ul class="list-group list-group-flush px-4 py-2">
+                   <% for (let t of tasks) {%> 
+                        <li class="list-group-item text-white my-2 <%= t.importance ? "bg-warning" : "bg-success" %> ">
+                        <%=t.task %>
+                        <div class=" d-flex justify-content-evenly align-items-center mt-3"> <a class="text-white" href="/edit">Edit</a> <form class="d-inline" action="/delete/<%=t._id %>?_method=DELETE" method="POST"><button class="p-1 btn btn-secondary">Remove</button></form></div>
+                        </li>
+                    <% } %> 
+                </ul>
+            </div>
+        </div>
+
+      </div>
+</div>

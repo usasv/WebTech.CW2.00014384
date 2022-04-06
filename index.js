@@ -22,13 +22,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 app.get('/', async (req, res, next)=>{
-try {
-    const tasks = await Task.find();
-    res.render("main", {tasks})
-} catch (error) {
-    next(error)
-}
+    try {
+        const tasks = await Task.find();
+        res.render("main", {tasks})
+    } catch (error) {
+        next(error)
+    }
 }
 )
+app.post('/create', async(req,res, next) => {
+    try {
+        const {task}=req.body
+    
+        const newTask= new Task(task);
+        await newTask.save()
+        res.redirect('/')
+    } catch (error) {
+        next(error)
+    }
+})
+app.delete('/delete/:id', async(req,res, next)=>{
+ try {
+     const {id}=req.params;
+     await Task.findByIdAndDelete(id);
+     res.redirect('/')
+ } catch (error) {
+     next(error)
+ }
+})
+app.get('/edit/:id')
 
 app.listen(3000, ()=> console.log("Serving on port 3000"))
