@@ -33,7 +33,8 @@ app.get('/', async (req, res, next)=>{
 app.post('/create', async(req,res, next) => {
     try {
         const {task}=req.body
-    
+    if(!task.hasOwnProperty('importance'))
+        task.importance="false";
         const newTask= new Task(task);
         await newTask.save()
         res.redirect('/')
@@ -62,12 +63,21 @@ app.get('/:id/edit/',async(req, res, next)=>{
 app.post('/edit/:id', async(req, res, next)=>{
 try {
     const {id}=req.params;
-    await Task.findByIdAndUpdate(id, req.body.task);
-    console.log(req.body.task);
+    const {task}= req.body
+    
+    if(!task.hasOwnProperty('importance')){
+        task.importance="false";
+    }
+   
+    await Task.findByIdAndUpdate(id, task);
     res.redirect('/')
 } catch (error) {
     next(error);
 }
 })
-
+//app.get('*', (req, res, next)=>{next(new Error("Not Found"))})
+app.use((err, req, res, next)=>{
+    console.log(err);
+    res.render("error", {err})
+})
 app.listen(3000, ()=> console.log("Serving on port 3000"))
