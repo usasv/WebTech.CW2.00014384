@@ -50,6 +50,24 @@ app.delete('/delete/:id', async(req,res, next)=>{
      next(error)
  }
 })
-app.get('/edit/:id')
+app.get('/:id/edit/',async(req, res, next)=>{
+    try {
+        const {id}=req.params
+        const task = await Task.findById(id);
+        res.render('edit', { task });
+    } catch (error) {
+        next(error)
+    }
+})
+app.post('/edit/:id', async(req, res, next)=>{
+try {
+    const {id}=req.params;
+    await Task.findByIdAndUpdate(id, req.body.task);
+    console.log(req.body.task);
+    res.redirect('/')
+} catch (error) {
+    next(error);
+}
+})
 
 app.listen(3000, ()=> console.log("Serving on port 3000"))
